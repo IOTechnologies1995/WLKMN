@@ -1,0 +1,6 @@
+{
+  "name": "WLKMN",
+  "description": "Retro cassette music file player with a handwritten paper song list, live animated cassette tape deck, and analog tape filter equalizer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

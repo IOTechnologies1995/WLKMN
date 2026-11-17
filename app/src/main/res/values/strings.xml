@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">WLKMN</string>
+    <string name="nav_song_list">Song List</string>
+    <string name="nav_cassette_deck">Tape Deck</string>
+    <string name="nav_customizer">Customizer</string>
+    <string name="action_add_files">Add Audio</string>
+    <string name="action_add_folder">Add Folder</string>
+    <string name="action_play">Play</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_next">Next Track</string>
+    <string name="action_previous">Previous Track</string>
+    <string name="action_shuffle">Toggle Shuffle</string>
+    <string name="action_repeat">Toggle Repeat</string>
+    <string name="action_remove_track">Remove Track</string>
+    <string name="action_search">Search tracks or albums</string>
+    <string name="paper_header_title">WLKMN — Side A Mixtape List</string>
+    <string name="paper_empty_title">Blank Sheet — Side A</string>
+    <string name="paper_empty_subtitle">Tap Add Audio or Add Folder above to write your tracks onto the list.</string>
+    <string name="cassette_no_track_title">NO TAPE LOADED</string>
+    <string name="cassette_no_track_artist">Select a song from the list</string>
+    <string name="customizer_title">TAPE DECK &amp; EQ STUDIO</string>
+    <string name="customizer_tape_filter_label">TAPE FILTER PROFILE</string>
+    <string name="customizer_eq_label">5-BAND GRAPHIC EQUALIZER</string>
+    <string name="customizer_analog_label">ANALOG TAPE CHARACTER</string>
+    <string name="customizer_shell_label">CASSETTE SHELL EDITION</string>
+</resources>
