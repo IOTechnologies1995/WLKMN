@@ -1,0 +1,63 @@
+name: Build WLKMN APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-debug-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Prepare debug keystore and environment
+        run: |
+          [ -f .env ] || cp .env.example .env || touch .env
+          if [ -s debug.keystore.base64 ]; then
+            python3 -c 'import base64, pathlib; pathlib.Path("debug.keystore").write_bytes(base64.b64decode(pathlib.Path("debug.keystore.base64").read_text().strip()))' || rm -f debug.keystore
+          fi
+          if [ ! -s debug.keystore ]; then
+            keytool -genkeypair -keystore debug.keystore \
+              -storepass android -alias androiddebugkey -keypass android \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
+      - name: Accept Android SDK licenses and install SDK 36
+        run: |
+          ANDROID_ROOT="${ANDROID_HOME:-$ANDROID_SDK_ROOT}"
+          SDK_MANAGER=$(find "$ANDROID_ROOT" -name sdkmanager -type f 2>/dev/null | head -n 1)
+          echo "Using sdkmanager: $SDK_MANAGER"
+          if [ -n "$SDK_MANAGER" ]; then
+            yes | "$SDK_MANAGER" --licenses > /dev/null 2>&1 || true
+            "$SDK_MANAGER" --install "platforms;android-36.1" "build-tools;36.0.0" || "$SDK_MANAGER" --install "platforms;android-36" "build-tools;36.0.0" || true
+            yes | "$SDK_MANAGER" --licenses > /dev/null 2>&1 || true
+          fi
+
+      - name: Set up Gradle 9.3.1
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.1'
+
+      - name: Build Debug APK
+        run: gradle :app:assembleDebug --no-daemon --console=plain -Dorg.gradle.jvmargs="-Xmx3g -Dfile.encoding=UTF-8"
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 30
